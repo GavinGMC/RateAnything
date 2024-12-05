@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Container } from 'react-bootstrap';
 import Review from './Review'; // Import the reusable Review component
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL;
 
 const Profile = () => {
   const [reviews, setReviews] = useState([]);
