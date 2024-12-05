@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Container } from 'react-bootstrap';
 import Review from './Review'; // Import the reusable Review component
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const Profile = () => {
   const [reviews, setReviews] = useState([]);
   const [error, setError] = useState('');
@@ -13,7 +15,7 @@ const Profile = () => {
   // Fetch user's reviews
   const fetchReviews = async () => {
     try {
-      const response = await fetch(`/api/reviews/user/${userId}`);
+      const response = await fetch(`${API_URL}/api/reviews/user/${userId}`);
       if (!response.ok) {
         throw new Error('Error fetching reviews');
       }
@@ -28,7 +30,7 @@ const Profile = () => {
   // Handle delete review
   const handleDelete = async (reviewId) => {
     try {
-      const response = await fetch(`/api/reviews/${reviewId}`, {
+      const response = await fetch(`${API_URL}/api/reviews/${reviewId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const CreateReview = ({ location, onSuccess}) => {
   const navigate = useNavigate();
   const [item, setItem] = useState('');
@@ -34,7 +36,7 @@ const CreateReview = ({ location, onSuccess}) => {
     };
 
     try {
-      const response = await fetch('/api/reviews', {
+      const response = await fetch(`${API_URL}/api/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

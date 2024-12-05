@@ -3,6 +3,8 @@ import Review from './Review';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom'; // For navigation to the map
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const Reviews = ({ selectedRating }) => {
   const [reviews, setReviews] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -33,7 +35,7 @@ const Reviews = ({ selectedRating }) => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch('/api/reviews');
+        const response = await fetch(`${API_URL}/api/reviews`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -82,7 +84,7 @@ const Reviews = ({ selectedRating }) => {
 
   const handleDelete = async (reviewId) => {
     try {
-      const response = await fetch(`/api/reviews/${reviewId}`, {
+      const response = await fetch(`${API_URL}/api/reviews/${reviewId}`, {
         method: 'DELETE',
         headers: {
           'User-Id': userId,

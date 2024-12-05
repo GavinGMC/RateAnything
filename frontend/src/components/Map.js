@@ -5,6 +5,8 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import CreateReview from './CreateReview';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const ReviewMap = () => {
   const [searchParams] = useSearchParams();
   const [reviews, setReviews] = useState([]);
@@ -70,7 +72,7 @@ const ReviewMap = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await fetch('/api/reviews');
+      const response = await fetch(`${API_URL}/api/reviews`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       setReviews(data);

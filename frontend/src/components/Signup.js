@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom'; // Import Link for navigation
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const Signup = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +25,7 @@ const Signup = () => {
     const signupData = { username, password };
 
     try {
-      const response = await fetch('/api/signup', {
+      const response = await fetch(`${API_URL}/api/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
