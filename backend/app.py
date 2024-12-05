@@ -9,8 +9,8 @@ import datetime
 
 load_dotenv()
 
-app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
-CORS(app)
+app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "https://rateanythingclt.com"}})
 
 db_config = {
     'host': os.getenv('DB_HOST'),
@@ -21,18 +21,6 @@ db_config = {
 
 def get_db_connection():
     return mysql.connector.connect(**db_config)
-
-@app.route('/')
-def serve_react_app():
-    return send_from_directory(app.static_folder, 'index.html')
-
-@app.route('/<path:path>', methods=['GET'])
-def serve_static_files(path):
-    # Serve static files if they exist, otherwise serve index.html for React Router
-    if path and os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
 
 # Register a new user
 @app.route('/api/signup', methods=['POST'])
@@ -205,6 +193,10 @@ def test_db():
     finally:
         cursor.close()
         connection.close()
+
+@app.route('/', methods=['GET'])
+def hello_world():
+    return 'Hello, World!'
 
 
 if __name__ == '__main__':
