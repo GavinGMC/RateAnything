@@ -3,7 +3,7 @@ import Review from './Review';
 import { Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom'; // For navigation to the map
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Reviews = ({ selectedRating }) => {
   const [reviews, setReviews] = useState([]);
