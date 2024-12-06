@@ -10,7 +10,6 @@ const API_URL = process.env.REACT_APP_API_BASE_URL;
 const ReviewMap = () => {
   const [searchParams] = useSearchParams();
   const [reviews, setReviews] = useState([]);
-  const [filteredReviews, setFilteredReviews] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState(null);
   const [error, setError] = useState('');
   const [userLocation, setUserLocation] = useState(null);
@@ -86,12 +85,9 @@ const ReviewMap = () => {
     fetchReviews();
   }, []);
 
-  useEffect(() => {
-    const filteredReviews = selectedRating 
-      ? reviews.filter((review) => review.rating === Number(selectedRating)) 
-      : reviews;
-    setFilteredReviews(filteredReviews);
-  }, [reviews, selectedRating]);  
+  const filteredReviews = reviews.filter(review => {
+    return ratingFilter === 0 || review.rating === ratingFilter;
+  });
 
   // Get user's current location when the component mounts
   useEffect(() => {
