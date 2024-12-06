@@ -7,16 +7,15 @@ import CreateReview from './CreateReview';
 
 const API_URL = process.env.REACT_APP_API_BASE_URL;
 
-const ReviewMap = ({ selectedRating, userLocation }) => {
+const ReviewMap = ({ selectedRating }) => {
   const [searchParams] = useSearchParams();
   const [reviews, setReviews] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState(null);
   const [error, setError] = useState('');
+  const [userLocation, setUserLocation] = useState(null);
   const [isReviewFocused, setIsReviewFocused] = useState(false); // State to track if the review is being focused on
   const mapRef = useRef();
   const markerRefs = useRef({});
-
-  const selectedRatingParam = searchParams.get('rating');
   const selectedReviewId = searchParams.get('reviewId');
 
   const defaultIcon = L.icon({
@@ -70,7 +69,7 @@ const ReviewMap = ({ selectedRating, userLocation }) => {
 
   const fetchReviews = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/reviews`);
+      const response = await fetch(${API_URL}/api/reviews);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       setReviews(data);
@@ -84,11 +83,22 @@ const ReviewMap = ({ selectedRating, userLocation }) => {
     fetchReviews();
   }, []);
 
-  const filteredReviews = selectedRatingParam
-    ? reviews.filter(review => review.rating === parseInt(selectedRatingParam))
+  const filteredReviews = selectedRating
+    ? reviews.filter(review => review.rating === selectedRating)
     : reviews;
 
-  // Update map view when the user's location or review focus changes
+  // Get user's current location when the component mounts
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ lat: latitude, lng: longitude });
+        }
+      );
+    }
+  }, []);
+
   useEffect(() => {
     if (userLocation && !isReviewFocused && mapRef.current) {
       const map = mapRef.current;
