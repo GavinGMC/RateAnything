@@ -11,7 +11,6 @@ const ReviewMap = () => {
   const [searchParams] = useSearchParams();
   const [reviews, setReviews] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState(null);
-  const [filteredReviews, setFilteredReviews] = useState([]);
   const [error, setError] = useState('');
   const [userLocation, setUserLocation] = useState(null);
   const [isReviewFocused, setIsReviewFocused] = useState(false); // State to track if the review is being focused on
@@ -70,29 +69,25 @@ const ReviewMap = () => {
     }
   };
 
-  const fetchReviews = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/reviews`);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const data = await response.json();
-      setReviews(data);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-      setError('Error fetching reviews. Please try again later.');
-    }
-  };
-
   useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/reviews`);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        setReviews(data);
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+        setError('Error fetching reviews. Please try again later.');
+      }
+    };
+
     fetchReviews();
   }, []);
 
-  useEffect(() => {
-    if (selectedRating !== null) {
-      setFilteredReviews(reviews.filter(review => review.rating === selectedRating));
-    } else {
-      setFilteredReviews(reviews);
-    }
-  }, [selectedRating, reviews]);
+  const filteredReviews = selectedRating
+    ? reviews.filter(review => review.rating === selectedRating)
+    : reviews;
 
   // Get user's current location when the component mounts
   useEffect(() => {
