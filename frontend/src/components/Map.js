@@ -85,9 +85,13 @@ const ReviewMap = () => {
     fetchReviews();
   }, []);
 
-  const filteredReviews = reviews.filter(review => {
-    return ratingFilter === 0 || review.rating === ratingFilter;
-  });
+  useEffect(() => {
+    if (selectedRating !== null) {
+      setFilteredReviews(reviews.filter(review => review.rating === selectedRating));
+    } else {
+      setFilteredReviews(reviews);
+    }
+  }, [selectedRating, reviews]);
 
   // Get user's current location when the component mounts
   useEffect(() => {
