@@ -11,6 +11,7 @@ const ReviewMap = () => {
   const [searchParams] = useSearchParams();
   const [reviews, setReviews] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState(null);
+  const [filteredReviews, setFilteredReviews] = useState([]);
   const [error, setError] = useState('');
   const [userLocation, setUserLocation] = useState(null);
   const [isReviewFocused, setIsReviewFocused] = useState(false); // State to track if the review is being focused on
