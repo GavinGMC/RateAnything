@@ -7,17 +7,16 @@ import CreateReview from './CreateReview';
 
 const API_URL = process.env.REACT_APP_API_BASE_URL;
 
-const ReviewMap = () => {
+const ReviewMap = ({ selectedRating, userLocation }) => {
   const [searchParams] = useSearchParams();
   const [reviews, setReviews] = useState([]);
   const [newMarkerPosition, setNewMarkerPosition] = useState(null);
   const [error, setError] = useState('');
-  const [userLocation, setUserLocation] = useState(null);
   const [isReviewFocused, setIsReviewFocused] = useState(false); // State to track if the review is being focused on
   const mapRef = useRef();
   const markerRefs = useRef({});
 
-  const selectedRating = searchParams.get('rating');
+  const selectedRatingParam = searchParams.get('rating');
   const selectedReviewId = searchParams.get('reviewId');
 
   const defaultIcon = L.icon({
@@ -69,38 +68,27 @@ const ReviewMap = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const response = await fetch(`${API_URL}/api/reviews`);
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-        setReviews(data);
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
-        setError('Error fetching reviews. Please try again later.');
-      }
-    };
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/reviews`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      setReviews(data);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      setError('Error fetching reviews. Please try again later.');
+    }
+  };
 
+  useEffect(() => {
     fetchReviews();
   }, []);
 
-  const filteredReviews = selectedRating
-    ? reviews.filter(review => review.rating === selectedRating)
+  const filteredReviews = selectedRatingParam
+    ? reviews.filter(review => review.rating === parseInt(selectedRatingParam))
     : reviews;
 
-  // Get user's current location when the component mounts
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setUserLocation({ lat: latitude, lng: longitude });
-        }
-      );
-    }
-  }, []);
-
+  // Update map view when the user's location or review focus changes
   useEffect(() => {
     if (userLocation && !isReviewFocused && mapRef.current) {
       const map = mapRef.current;
