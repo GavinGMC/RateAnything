@@ -6,7 +6,6 @@ import L from 'leaflet';
 import CreateReview from './CreateReview';
 
 const API_URL = process.env.REACT_APP_API_BASE_URL;
-console.log("API URL:", API_URL);
 
 const ReviewMap = () => {
   const [searchParams] = useSearchParams();
@@ -88,13 +87,11 @@ const ReviewMap = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedRating !== null) {
-      const filtered = reviews.filter((review) => Number(review.rating) === Number(selectedRating));
-      setFilteredReviews(filtered);
-    } else {
-      setFilteredReviews(reviews);
-    }
-  }, [selectedRating, reviews]);
+    const filteredReviews = selectedRating 
+      ? reviews.filter((review) => review.rating === Number(selectedRating)) 
+      : reviews;
+    setFilteredReviews(filteredReviews);
+  }, [reviews, selectedRating]);  
 
   // Get user's current location when the component mounts
   useEffect(() => {
