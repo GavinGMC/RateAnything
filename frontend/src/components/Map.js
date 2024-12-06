@@ -69,7 +69,7 @@ const ReviewMap = ({ selectedRating }) => {
 
   const fetchReviews = async () => {
     try {
-      const response = await fetch(${API_URL}/api/reviews);
+      const response = await fetch(`${API_URL}/api/reviews`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       setReviews(data);
